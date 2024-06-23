@@ -6,7 +6,6 @@ import {
     StandaloneSearchBox,
     LoadScript,
 } from "@react-google-maps/api";
-import html2canvas from "html2canvas";
 import { useNavigate } from "react-router-dom";
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = "AIzaSyBPNDwcXIX6yYDnl3cELoFg9qzhdUW3NMs";
@@ -28,6 +27,8 @@ const MapCapture = () => {
     const selectedPosition = useRef(center);
 
     const [map, setMap] = useState(null);
+    const zoomRef = useState(8);
+
     const mapRef = useRef();
 
     const { isLoaded, loadError } = useJsApiLoader({
@@ -53,6 +54,7 @@ const MapCapture = () => {
             } else {
                 mapRef.current.setCenter(geometry.location);
                 mapRef.current.setZoom(14);
+                zoomRef.current = 14;
             }
         }
     };
@@ -74,18 +76,19 @@ const MapCapture = () => {
     };
 
     const captureStreetViewImage = async () => {
-        const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${selectedPosition.lat},${selectedPosition.lng}&fov=80&heading=70&pitch=0&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
+        // const image = `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${selectedPosition.lat},${selectedPosition.lng}&fov=80&heading=70&pitch=0&key=${REACT_APP_GOOGLE_MAPS_API_KEY}`;
+        const image = `https://maps.googleapis.com/maps/api/staticmap?center=${selectedPosition.current.lat},${selectedPosition.current.lng}&zoom=${mapRef.current.zoom}&size=600x400&key=${REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
         try {
-            const response = await axios.post(
-                "http://localhost:5000/api/captures/upload",
-                {
-                    image: streetViewUrl,
-                    region: `${selectedPosition.lat},${selectedPosition.lng}`,
-                }
-            );
+            // const response = await axios.post(
+            //     "http://localhost:5000/api/captures/upload",
+            //     {
+            //         image: streetViewUrl,
+            //         region: `${selectedPosition.lat},${selectedPosition.lng}`,
+            //     }
+            // );
 
-            navigate("/render3d", { state: { streetViewUrl } });
+            navigate("/render3d", { state: { image } });
         } catch (error) {
             console.error("Error capturing Street View image:", error);
         }
