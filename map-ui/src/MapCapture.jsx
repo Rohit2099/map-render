@@ -25,7 +25,10 @@ const MapCapture = () => {
     const zoom = 10;
 
     const searchBoxRef = useRef(null);
+    const selectedPosition = useRef(center);
+
     const [map, setMap] = useState(null);
+    const mapRef = useRef();
 
     const { isLoaded, loadError } = useJsApiLoader({
         id: "google-map-script",
@@ -35,16 +38,31 @@ const MapCapture = () => {
 
     const onSearchBoxLoad = (ref) => (searchBoxRef.current = ref);
     const onPlacesChanged = () => {
-        const location = searchBoxRef.current.getPlaces()[0].geometry.location;
-        const bounds = new window.google.maps.LatLngBounds(location.toJSON());
-        setMap(map.fitBounds(bounds));
-        console.log(bounds);
+        const places = searchBoxRef.current.getPlaces();
+        const place = places[0];
+
+        if (place) {
+            const { geometry } = place;
+            const location = geometry.location;
+            selectedPosition.current = {
+                lat: location.lat(),
+                lng: location.lng(),
+            };
+            if (geometry.viewport) {
+                mapRef.current.fitBounds(geometry.viewport);
+            } else {
+                mapRef.current.setCenter(geometry.location);
+                mapRef.current.setZoom(14);
+            }
+        }
     };
 
     const navigate = useNavigate();
 
     const onMapLoad = useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
+        mapRef.current = map;
+
         map.fitBounds(bounds);
         setMap(map);
         console.log(map);
@@ -55,30 +73,23 @@ const MapCapture = () => {
         console.log(e.latLng.lat() + ", " + e.latLng.lng());
     };
 
-    // const captureRegionImage = async () => {
-    //     if (!selectedRegion) return;
+    const captureStreetViewImage = async () => {
+        const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?size=600x400&location=${selectedPosition.lat},${selectedPosition.lng}&fov=80&heading=70&pitch=0&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
 
-    //     const ne = selectedRegion.getNorthEast();
-    //     const sw = selectedRegion.getSouthWest();
+        try {
+            const response = await axios.post(
+                "http://localhost:5000/api/captures/upload",
+                {
+                    image: streetViewUrl,
+                    region: `${selectedPosition.lat},${selectedPosition.lng}`,
+                }
+            );
 
-    //     const staticMapUrl = `https://maps.googleapis.com/maps/api/staticmap?size=600x400&maptype=roadmap&path=enc:${encodeURI(
-    //         `via:${ne.lat()},${ne.lng()}|via:${sw.lat()},${sw.lng()}`
-    //     )}&key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}`;
-
-    //     try {
-    //         const response = await axios.post(
-    //             "http://localhost:5000/api/captures/upload",
-    //             {
-    //                 image: staticMapUrl,
-    //                 region: selectedRegion.toUrlValue(),
-    //             }
-    //         );
-
-    //         navigate("/render3d", { state: { staticMapUrl } });
-    //     } catch (error) {
-    //         console.error("Error capturing region image:", error);
-    //     }
-    // };
+            navigate("/render3d", { state: { streetViewUrl } });
+        } catch (error) {
+            console.error("Error capturing Street View image:", error);
+        }
+    };
 
     // const [map, setMap] = useState(null);
     //
@@ -125,41 +136,44 @@ const MapCapture = () => {
     if (!isLoaded) return "Loading Maps";
 
     return (
-        <div className="App">
-            {isLoaded && (
-                <GoogleMap
-                    mapContainerStyle={mapContainerStyle}
-                    zoom={zoom}
-                    center={center}
-                    onLoad={onMapLoad}
-                    onClick={onClick}
-                >
-                    <StandaloneSearchBox
-                        onLoad={onSearchBoxLoad}
-                        onPlacesChanged={onPlacesChanged}
+        <div className="map-container">
+            <div>
+                {isLoaded && (
+                    <GoogleMap
+                        mapContainerStyle={mapContainerStyle}
+                        zoom={zoom}
+                        center={center}
+                        onLoad={onMapLoad}
+                        onClick={onClick}
                     >
-                        <input
-                            type="text"
-                            placeholder="Enter your location"
-                            style={{
-                                boxSizing: `border-box`,
-                                border: `1px solid transparent`,
-                                width: `240px`,
-                                height: `32px`,
-                                padding: `0 12px`,
-                                borderRadius: `3px`,
-                                boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                                fontSize: `14px`,
-                                outline: `none`,
-                                textOverflow: `ellipses`,
-                                position: "absolute",
-                                left: "50%",
-                                marginLeft: "-120px",
-                            }}
-                        />
-                    </StandaloneSearchBox>
-                </GoogleMap>
-            )}
+                        <StandaloneSearchBox
+                            onLoad={onSearchBoxLoad}
+                            onPlacesChanged={onPlacesChanged}
+                        >
+                            <input
+                                type="text"
+                                placeholder="Enter your location"
+                                style={{
+                                    boxSizing: `border-box`,
+                                    border: `1px solid transparent`,
+                                    width: `240px`,
+                                    height: `32px`,
+                                    padding: `0 12px`,
+                                    borderRadius: `3px`,
+                                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                                    fontSize: `14px`,
+                                    outline: `none`,
+                                    textOverflow: `ellipses`,
+                                    position: "absolute",
+                                    left: "50%",
+                                    marginLeft: "-120px",
+                                }}
+                            />
+                        </StandaloneSearchBox>
+                    </GoogleMap>
+                )}
+                <button onClick={captureStreetViewImage}>Capture Region</button>
+            </div>
         </div>
     );
 };
