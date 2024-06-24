@@ -29,6 +29,11 @@ const UserCaptures = () => {
         }
     }, [token]);
 
+    const onImageSelect = (e) => {
+        let image = e.target.src;
+        navigate("/render3d", { state: { image } });
+    }
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
           <div className="w-full max-w-5xl p-6 bg-white rounded-lg shadow-lg">
@@ -36,7 +41,7 @@ const UserCaptures = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {captures.map(capture => (
                 <div key={capture._id} className="border rounded-lg overflow-hidden shadow-sm bg-gray-50">
-                  <img src={capture.imageUrl} alt={`Capture at ${capture.latitude}, ${capture.longitude}`} className="w-full h-48 object-cover" />
+                  <img src={capture.imageUrl} alt={`Capture at ${capture.latitude}, ${capture.longitude}`} className="w-full h-48 object-cover hover:opacity-60 hover:cursor-pointer" onClick={onImageSelect}/>
                   <div className="p-4">
                     <p className="text-sm text-gray-600">Lat: {capture.latitude}</p>
                     <p className="text-sm text-gray-600">Lng: {capture.longitude}</p>

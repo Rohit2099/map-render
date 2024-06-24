@@ -13,13 +13,11 @@ import {
 import "@babylonjs/loaders";
 import { AuthContext } from "./AuthContext";
 
-
 const Render3D = () => {
     const location = useLocation();
     const { image } = location.state || {};
     const { token } = useContext(AuthContext);
     const navigate = useNavigate();
-
 
     useEffect(() => {
         if (!image) return;
@@ -71,10 +69,9 @@ const Render3D = () => {
 
     if (!token) {
         return (
-            <button onClick={() => navigate("/login")}>
-                {" "}
-                Not Logged in! Login to view captures
-            </button>
+            <label className="block text-sm font-medium text-gray-700 text-center">
+                Login to continue
+            </label>
         );
     }
 

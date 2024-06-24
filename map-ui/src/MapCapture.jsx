@@ -107,6 +107,12 @@ const MapCapture = () => {
 
     if (!isLoaded) return "Loading Maps";
 
+    if(!token) {
+        return (
+            <label className="block text-sm font-medium text-gray-700 text-center">Login to continue</label>
+        )
+    }
+
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-blue-50">
             <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-lg">
