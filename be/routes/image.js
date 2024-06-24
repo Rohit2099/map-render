@@ -1,41 +1,55 @@
-const express = require('express');
-const multer = require('multer');
-const Capture = require('../models/Image');
-const router = express.Router();
+const express = require("express");
+const Capture = require("../models/Capture");
+const imageRouter = express.Router();
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
+const { authenticateToken } = require("./login");
+console.log(authenticateToken);
+// Endpoint to save image URL and metadata to MongoDB
+imageRouter.post(
+    "/upload",
+    authenticateToken,
+    async (req, res) => {
+        const { latitude, longitude, zoom, imageUrl } = req.body;
+
+        const capture = new Capture({
+            userId: req.user.id,
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+            zoom: parseInt(zoom),
+            imageUrl,
+        });
+
+        try {
+            await capture.save();
+            res.status(200).json({ message: "Capture saved successfully" });
+        } catch (error) {
+            res.status(500).json({ message: "Error saving capture", error });
+        }
     }
-});
+);
 
-const upload = multer({ storage });
-
-router.post('/upload', upload.single('image'), async (req, res) => {
-    const { region, userId } = req.body;
-    const image = req.file.path;
-
+// Endpoint to get all captures for the logged-in user
+imageRouter.get("/", authenticateToken, async (req, res) => {
     try {
-        const newCapture = new Capture({ image, region, userId });
-        await newCapture.save();
-        res.status(201).json(newCapture);
-    } catch (error) {
-        res.status(500).json({ message: error.message });
-    }
-});
-
-router.get('/', async (req, res) => {
-    try {
-        const captures = await Capture.find();
+        const captures = await Capture.find({ userId: req.user.id });
         res.status(200).json(captures);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ message: "Error fetching captures", error });
     }
 });
 
-// Additional endpoints for analytics, caching, and state management can be added here.
+// Endpoint to get a single capture by ID for the logged-in user
+imageRouter.get("/:id", authenticateToken, async (req, res) => {
+    const { id } = req.params;
+    try {
+        const capture = await Capture.findOne({ _id: id, userId: req.user.id });
+        if (!capture) {
+            return res.status(404).json({ message: "Capture not found" });
+        }
+        res.status(200).json(capture);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching capture", error });
+    }
+});
 
-module.exports = router;
+module.exports = imageRouter;

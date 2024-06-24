@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useEffect, useContext } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
     Engine,
     Scene,
@@ -11,10 +11,15 @@ import {
     Vector3,
 } from "@babylonjs/core";
 import "@babylonjs/loaders";
+import { AuthContext } from "./AuthContext";
+
 
 const Render3D = () => {
     const location = useLocation();
     const { image } = location.state || {};
+    const { token } = useContext(AuthContext);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         if (!image) return;
@@ -63,6 +68,15 @@ const Render3D = () => {
             engine.dispose();
         };
     }, [image]);
+
+    if (!token) {
+        return (
+            <button onClick={() => navigate("/login")}>
+                {" "}
+                Not Logged in! Login to view captures
+            </button>
+        );
+    }
 
     return (
         <div>

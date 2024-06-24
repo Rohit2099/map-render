@@ -1,8 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const cors = require("cors");
+const User = require('./models/User');
+
 require("dotenv").config();
+const { check, validationResult } = require('express-validator');
 
 const app = express();
 app.use(cors());
@@ -12,31 +17,13 @@ const port = process.env.PORT || 5000;
 
 mongoose.connect(process.env.MONGO_URI);
 
-const Capture = require("./models/Capture");
-
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// Endpoint to save image URL and metadata to MongoDB
-app.post("/api/captures/upload", async (req, res) => {
-    const { latitude, longitude, zoom, imagePath } = req.body;
-    const capture = new Capture({
-        latitude: parseFloat(latitude),
-        longitude: parseFloat(longitude),
-        zoom: parseInt(zoom),
-        imagePath,
-    });
-    console.log("in api");
+const {loginRouter} = require('./routes/login.js');
+const imageRouter = require('./routes/image.js');
+app.use('/api/users', loginRouter);
+app.use('/api/captures', imageRouter);
 
-    try {
-        await capture.save().then((savedDoc) => {
-            console.log(savedDoc);
-        });
-        res.status(200).json({ message: "Capture saved successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Error saving capture", error });
-    }
-});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

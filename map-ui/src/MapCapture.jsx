@@ -1,21 +1,22 @@
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, useContext } from "react";
 import {
     GoogleMap,
     useJsApiLoader,
-    DrawingManager,
     StandaloneSearchBox,
-    LoadScript,
 } from "@react-google-maps/api";
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
+import axios from "axios";
+import { AuthContext } from "./AuthContext.jsx";
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = "AIzaSyBPNDwcXIX6yYDnl3cELoFg9qzhdUW3NMs";
 
 const MapCapture = () => {
     const mapContainerStyle = {
-        height: "80vh",
-        width: "100vw",
+        width: '100%',
+        height: '600px'
     };
+    const { token } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const center = {
         lat: 40.75378,
@@ -60,8 +61,6 @@ const MapCapture = () => {
         }
     };
 
-    const navigate = useNavigate();
-
     const onMapLoad = useCallback(function callback(map) {
         const bounds = new window.google.maps.LatLngBounds(center);
         mapRef.current = map;
@@ -81,65 +80,82 @@ const MapCapture = () => {
         const center = map.getCenter();
         const zoom = map.getZoom();
         const size = mapContainerStyle;
-    
-        const image = `https://maps.googleapis.com/maps/api/staticmap?center=${selectedPosition.current.lat},${selectedPosition.current.lng}&zoom=${mapRef.current.zoom}&size=600x400&key=${REACT_APP_GOOGLE_MAPS_API_KEY}`;
-    
-        try {
-    
-          await axios.post('http://localhost:5000/api/captures/upload', {
-            latitude: center.lat(),
-            longitude: center.lng(),
-            zoom: zoom,
-            imagePath: image
-          });
-    
-          navigate('/render3d', { state: { image } });
-        } catch (error) {
-          console.error('Error capturing map image:', error);
-        }
-      };
 
+        const image = `https://maps.googleapis.com/maps/api/staticmap?center=${selectedPosition.current.lat},${selectedPosition.current.lng}&zoom=${mapRef.current.zoom}&size=600x400&key=${REACT_APP_GOOGLE_MAPS_API_KEY}`;
+
+        try {
+            await axios.post(
+                "http://localhost:5000/api/captures/upload",
+                {
+                    latitude: center.lat(),
+                    longitude: center.lng(),
+                    zoom: zoom,
+                    imageUrl: image,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            navigate("/render3d", { state: { image } });
+        } catch (error) {
+            console.error("Error capturing map image:", error);
+        }
+    };
 
     if (!isLoaded) return "Loading Maps";
 
     return (
-        <div className="map-container">
-            <div>
-                {isLoaded && (
-                    <GoogleMap
-                        mapContainerStyle={mapContainerStyle}
-                        zoom={zoom}
-                        center={center}
-                        onLoad={onMapLoad}
-                        onClick={onClick}
-                    >
-                        <StandaloneSearchBox
-                            onLoad={onSearchBoxLoad}
-                            onPlacesChanged={onPlacesChanged}
+        <div className="flex flex-col items-center justify-center min-h-screen bg-blue-50">
+            <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-lg">
+                <h2 className="text-3xl font-semibold text-center mb-6 text-blue-600">
+                    Capture Map
+                </h2>
+                <div>
+                    {isLoaded && (
+                        <GoogleMap
+                            mapContainerStyle={mapContainerStyle}
+                            zoom={zoom}
+                            center={center}
+                            onLoad={onMapLoad}
+                            onClick={onClick}
                         >
-                            <input
-                                type="text"
-                                placeholder="Enter your location"
-                                style={{
-                                    boxSizing: `border-box`,
-                                    border: `1px solid transparent`,
-                                    width: `240px`,
-                                    height: `32px`,
-                                    padding: `0 12px`,
-                                    borderRadius: `3px`,
-                                    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
-                                    fontSize: `14px`,
-                                    outline: `none`,
-                                    textOverflow: `ellipses`,
-                                    position: "absolute",
-                                    left: "50%",
-                                    marginLeft: "-120px",
-                                }}
-                            />
-                        </StandaloneSearchBox>
-                    </GoogleMap>
-                )}
-                <button onClick={captureMapImage}>Capture Region</button>
+                            <StandaloneSearchBox
+                                onLoad={onSearchBoxLoad}
+                                onPlacesChanged={onPlacesChanged}
+                            >
+                                <input
+                                    type="text"
+                                    className="block w-full px-4 py-2 mb-4 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    placeholder="Enter your location"
+                                    style={{
+                                        boxSizing: `border-box`,
+                                        border: `1px solid transparent`,
+                                        width: `240px`,
+                                        height: `32px`,
+                                        padding: `0 12px`,
+                                        borderRadius: `3px`,
+                                        boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                                        fontSize: `14px`,
+                                        outline: `none`,
+                                        textOverflow: `ellipses`,
+                                        position: "absolute",
+                                        left: "50%",
+                                        marginLeft: "-120px",
+                                    }}
+                                />
+                            </StandaloneSearchBox>
+                        </GoogleMap>
+                    )}
+                    <button
+                        onClick={captureMapImage}
+                        className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                    >
+                        Capture Region
+                    </button>
+                </div>
             </div>
         </div>
     );
