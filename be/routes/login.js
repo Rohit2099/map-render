@@ -6,8 +6,6 @@ const User = require('../models/User');
 const { check, validationResult } = require('express-validator');
 
 
-
-// Middleware to authenticate user
 const authenticateToken = (req, res, next) => {
     const token = req.header("Authorization").split(" ")[1];
     if (!token) return res.status(401).json({ message: "Access denied" });
@@ -18,7 +16,6 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// Register user
 loginRouter.post("/register",
     [
         check("username", "Username is required").not().isEmpty(),
@@ -49,12 +46,11 @@ loginRouter.post("/register",
             });
             res.status(201).json({ token });
         } catch (error) {
-            res.status(500).json({ message: "Server error" });
+            res.status(500).json({ message: "Unable to register" });
         }
     }
 );
 
-// Login user
 loginRouter.post("/login", async (req, res) => {
     const { username, password } = req.body;
     debugger;
@@ -74,7 +70,7 @@ loginRouter.post("/login", async (req, res) => {
         });
         res.status(200).json({ token });
     } catch (error) {
-        res.status(500).json({ message: "Server error" });
+        res.status(500).json({ message: "Unable to login" });
     }
 });
 

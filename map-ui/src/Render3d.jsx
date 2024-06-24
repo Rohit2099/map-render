@@ -1,5 +1,5 @@
 import { useEffect, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
     Engine,
     Scene,
@@ -9,7 +9,6 @@ import {
     Texture,
     HemisphericLight,
     Vector3,
-    ShadowGenerator,
     SpotLight,
 } from "@babylonjs/core";
 import "@babylonjs/loaders";
@@ -19,7 +18,6 @@ const Render3D = () => {
     const location = useLocation();
     const { image } = location.state || {};
     const { token } = useContext(AuthContext);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (!image) return;
@@ -45,7 +43,6 @@ const Render3D = () => {
         );
         light.intensity = 0.7;
 
-        // Adding a spotlight for better effect
         const spotLight = new SpotLight(
             "spotLight",
             new Vector3(2, 2, 2),

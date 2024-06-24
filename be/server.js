@@ -1,13 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const path = require("path");
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const cors = require("cors");
-const User = require('./models/User');
 require('dotenv').config();
 
-const { check, validationResult } = require('express-validator');
 
 const app = express();
 app.use(cors());

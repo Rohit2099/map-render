@@ -5,7 +5,7 @@ const imageRouter = express.Router();
 const { authenticateToken } = require("./login");
 const User = require("../models/User");
 console.log(authenticateToken);
-// Endpoint to save image URL and metadata to MongoDB
+
 imageRouter.post("/upload", authenticateToken, async (req, res) => {
     const { latitude, longitude, zoom, imageUrl } = req.body;
 
@@ -56,21 +56,20 @@ imageRouter.get('/top3', async (req, res) => {
     }
   });
 
-// Endpoint to get a single capture by ID for the logged-in user
-imageRouter.get("/:id", authenticateToken, async (req, res) => {
-    const { id } = req.params;
-    try {
-        const capture = await Capture.findOne({ _id: id, userId: req.user.id });
-        if (!capture) {
-            return res.status(404).json({ message: "Capture not found" });
-        }
-        res.status(200).json(capture);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching capture", error });
-    }
-});
+// // Endpoint to get a single capture by ID for the logged-in user
+// imageRouter.get("/:id", authenticateToken, async (req, res) => {
+//     const { id } = req.params;
+//     try {
+//         const capture = await Capture.findOne({ _id: id, userId: req.user.id });
+//         if (!capture) {
+//             return res.status(404).json({ message: "Capture not found" });
+//         }
+//         res.status(200).json(capture);
+//     } catch (error) {
+//         res.status(500).json({ message: "Error fetching capture", error });
+//     }
+// });
 
-// Endpoint to get all captures for the logged-in user
 imageRouter.get("/", authenticateToken, async (req, res) => {
     try {
         const captures = await Capture.find({ userId: req.user.id });

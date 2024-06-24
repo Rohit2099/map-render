@@ -4,7 +4,8 @@ import {useNavigate} from 'react-router-dom';
 import { AuthContext } from "./AuthContext";
 
 
-const REACT_APP_GOOGLE_MAPS_API_KEY = "AIzaSyBPNDwcXIX6yYDnl3cELoFg9qzhdUW3NMs";
+const REACT_APP_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+
 const UserCaptures = () => {
     const [captures, setCaptures] = useState([]);
     const { token } = useContext(AuthContext);

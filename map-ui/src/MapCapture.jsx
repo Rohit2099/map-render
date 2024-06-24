@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "./AuthContext.jsx";
 
-const REACT_APP_GOOGLE_MAPS_API_KEY = "AIzaSyBPNDwcXIX6yYDnl3cELoFg9qzhdUW3NMs";
+const REACT_APP_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 
 const MapCapture = () => {
     const mapContainerStyle = {
@@ -19,8 +19,8 @@ const MapCapture = () => {
     const navigate = useNavigate();
 
     const center = {
-        lat: 40.75378,
-        lng: -73.55658,
+        lat: 20.5937,
+        lng: 78.9629,
     };
 
     const zoom = 10;
@@ -29,7 +29,6 @@ const MapCapture = () => {
     const selectedPosition = useRef(center);
 
     const [map, setMap] = useState(null);
-    const zoomRef = useState(8);
 
     const mapRef = useRef();
 
@@ -56,7 +55,6 @@ const MapCapture = () => {
             } else {
                 mapRef.current.setCenter(geometry.location);
                 mapRef.current.setZoom(14);
-                zoomRef.current = 14;
             }
         }
     };
@@ -68,12 +66,7 @@ const MapCapture = () => {
         map.fitBounds(bounds);
         setMap(map);
         console.log(map);
-    }, []);
-
-    const onClick = (e) => {
-        console.log("onClick args: ", e, { map });
-        console.log(e.latLng.lat() + ", " + e.latLng.lng());
-    };
+    }, [center]);
 
     const captureMapImage = async () => {
         const map = mapRef.current;

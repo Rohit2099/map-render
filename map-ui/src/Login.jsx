@@ -23,7 +23,6 @@ const Login = () => {
             );
             login(response.data.token);
             navigate("/captures");
-            // Redirect to map capture page after login
         } catch (error) {
             let message = error.response.data.message;
             setError(message);
