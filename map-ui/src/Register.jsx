@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ const Register = () => {
       login(response.data.token);
       navigate('/captures');
     } catch (error) {
+        let message = error.response.data.message;
+        setError(message);
       console.error('Error registering user:', error);
     }
   };
@@ -51,6 +54,7 @@ const Register = () => {
               required
             />
           </div>
+            {error ? <div> <label className="block text-sm font-medium text-red-700 text-center">{error}</label></div> : <></>}
           <div>
             <button type="submit" className="w-full px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">Register</button>
           </div>

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router";
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
 
@@ -23,6 +25,8 @@ const Login = () => {
             navigate("/captures");
             // Redirect to map capture page after login
         } catch (error) {
+            let message = error.response.data.message;
+            setError(message);
             console.error("Error logging in user:", error);
         }
     };
@@ -64,6 +68,18 @@ const Login = () => {
                             className="block w-full px-3 py-2 mt-1 border rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         />
                     </div>
+
+                    {error ? (
+                        <div>
+                            {" "}
+                            <label className="block text-sm font-medium text-red-700 text-center">
+                                {error}
+                            </label>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+
                     <div>
                         <button
                             type="submit"
