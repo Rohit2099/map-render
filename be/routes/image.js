@@ -25,15 +25,36 @@ imageRouter.post("/upload", authenticateToken, async (req, res) => {
     }
 });
 
-// Endpoint to get all captures for the logged-in user
-imageRouter.get("/", authenticateToken, async (req, res) => {
+imageRouter.get('/top3', async (req, res) => {
     try {
-        const captures = await Capture.find({ userId: req.user.id });
-        res.status(200).json(captures);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching captures", error });
+      const topRegions = await Capture.aggregate([
+        {
+          $group: {
+            _id: { latitude: '$latitude', longitude: '$longitude', zoom: '$zoom' },
+            count: { $sum: 1 },
+            imageUrl: { $first: '$imageUrl' }
+          }
+        },
+        { $sort: { count: -1 } },
+        { $limit: 3 },
+        {
+          $project: {
+            _id: 0,
+            latitude: '$_id.latitude',
+            longitude: '$_id.longitude',
+            zoom: '$_id.zoom',
+            count: 1,
+            imageUrl: 1
+          }
+        }
+      ]);
+  
+      res.json(topRegions);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Unable to get top 3');
     }
-});
+  });
 
 // Endpoint to get a single capture by ID for the logged-in user
 imageRouter.get("/:id", authenticateToken, async (req, res) => {
@@ -49,28 +70,15 @@ imageRouter.get("/:id", authenticateToken, async (req, res) => {
     }
 });
 
-
-imageRouter.get("/top3", async (req, res) => {
+// Endpoint to get all captures for the logged-in user
+imageRouter.get("/", authenticateToken, async (req, res) => {
     try {
-        debugger;
-        const topRegions = await Capture.aggregate([
-            {
-                $group: {
-                    _id: { latitude: "$latitude", longitude: "$longitude" },
-                    count: { $sum: 1 },
-                },
-            },
-            { $sort: { count: -1 } },
-            { $limit: 3 },
-        ]);
-
-        res.json(topRegions);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Server Error");
+        const captures = await Capture.find({ userId: req.user.id });
+        res.status(200).json(captures);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching captures", error });
     }
 });
 
-module.exports = router;
 
 module.exports = imageRouter;

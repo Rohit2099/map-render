@@ -5,8 +5,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const cors = require("cors");
 const User = require('./models/User');
+require('dotenv').config();
 
-require("dotenv").config();
 const { check, validationResult } = require('express-validator');
 
 const app = express();
@@ -23,7 +23,7 @@ const {loginRouter} = require('./routes/login.js');
 const imageRouter = require('./routes/image.js');
 app.use('/api/users', loginRouter);
 app.use('/api/captures', imageRouter);
-
+debugger;
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

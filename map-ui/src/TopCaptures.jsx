@@ -39,7 +39,7 @@ const UserCaptures = () => {
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
           <div className="w-full max-w-5xl p-6 bg-white rounded-lg shadow-lg">
-            <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">Your Captures</h2>
+            <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">Top 3 Captures</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {captures.map(capture => {
                 const details = {
@@ -51,8 +51,8 @@ const UserCaptures = () => {
                 return (<div key={capture._id} className="border rounded-lg overflow-hidden shadow-sm bg-gray-50">
                   <img src={image} alt={`Capture at ${capture.latitude}, ${capture.longitude}`} className="w-full h-48 object-cover hover:opacity-60 hover:cursor-pointer" onClick={onImageSelect}/>
                   <div className="p-4">
-                    <p className="text-sm text-gray-600">Lat: {capture.latitude}</p>
-                    <p className="text-sm text-gray-600">Lng: {capture.longitude}</p>
+                    <p className="text-sm text-gray-600">Latitude: {capture.latitude}</p>
+                    <p className="text-sm text-gray-600">Longitude: {capture.longitude}</p>
                     <p className="text-sm text-gray-600">Zoom: {capture.zoom}</p>
                   </div>
                 </div>)

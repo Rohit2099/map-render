@@ -51,8 +51,8 @@ const UserCaptures = () => {
                 return (<div key={capture._id} className="border rounded-lg overflow-hidden shadow-sm bg-gray-50">
                   <img src={image} alt={`Capture at ${capture.latitude}, ${capture.longitude}`} className="w-full h-48 object-cover hover:opacity-60 hover:cursor-pointer" onClick={onImageSelect}/>
                   <div className="p-4">
-                    <p className="text-sm text-gray-600">Lat: {capture.latitude}</p>
-                    <p className="text-sm text-gray-600">Lng: {capture.longitude}</p>
+                    <p className="text-sm text-gray-600">Latitude: {capture.latitude}</p>
+                    <p className="text-sm text-gray-600">Longitude: {capture.longitude}</p>
                     <p className="text-sm text-gray-600">Zoom: {capture.zoom}</p>
                   </div>
                 </div>)

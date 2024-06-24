@@ -91,8 +91,8 @@ const MapCapture = () => {
             await axios.post(
                 "http://localhost:5000/api/captures/upload",
                 {
-                    latitude: center.lat(),
-                    longitude: center.lng(),
+                    latitude: Math.floor(center.lat()),
+                    longitude: Math.floor(center.lng()),
                     zoom: zoom,
                     imageUrl: imageNor,
                 },
