@@ -123,7 +123,6 @@ const MapCapture = () => {
                             zoom={zoom}
                             center={center}
                             onLoad={onMapLoad}
-                            onClick={onClick}
                         >
                             <StandaloneSearchBox
                                 onLoad={onSearchBoxLoad}
