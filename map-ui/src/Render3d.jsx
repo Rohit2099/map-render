@@ -9,6 +9,8 @@ import {
     Texture,
     HemisphericLight,
     Vector3,
+    ShadowGenerator,
+    SpotLight,
 } from "@babylonjs/core";
 import "@babylonjs/loaders";
 import { AuthContext } from "./AuthContext";
@@ -41,6 +43,18 @@ const Render3D = () => {
             new Vector3(1, 1, 0),
             scene
         );
+        light.intensity = 0.7;
+
+        // Adding a spotlight for better effect
+        const spotLight = new SpotLight(
+            "spotLight",
+            new Vector3(2, 2, 2),
+            new Vector3(-1, -1, -1),
+            Math.PI / 3,
+            2,
+            scene
+        );
+        spotLight.intensity = 0.5;
 
         const box = MeshBuilder.CreateBox(
             "box",
@@ -75,16 +89,20 @@ const Render3D = () => {
         );
     }
 
+    if (!image) {
+        return (
+            <label className="block text-sm font-medium text-gray-700 text-center">
+                Image invalid
+            </label>
+        );
+    }
+
     return (
-        <div>
-            {image ? (
-                <canvas
-                    id="renderCanvas"
-                    style={{ width: "100%", height: "100vh" }}
-                ></canvas>
-            ) : (
-                <div>No image data provided</div>
-            )}
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+            <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">
+                Map Renderer
+            </h2>
+            <canvas id="renderCanvas" className="w-full h-96"></canvas>
         </div>
     );
 };

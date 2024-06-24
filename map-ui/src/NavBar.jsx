@@ -49,6 +49,14 @@ const NavBar = () => {
                             </Link>
                         </li>
                         <li>
+                            <Link
+                                to="/topcaptures"
+                                className="hover:text-gray-200"
+                            >
+                                Top Captures
+                            </Link>
+                        </li>                        
+                        <li>
                             <button
                                 onClick={handleLogout}
                                 className="hover:text-gray-200"

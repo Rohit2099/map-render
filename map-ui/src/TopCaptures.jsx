@@ -14,7 +14,7 @@ const UserCaptures = () => {
         const fetchCaptures = async () => {
             try {
                 const response = await axios.get(
-                    "http://localhost:5000/api/captures",
+                    "http://localhost:5000/api/captures/top3",
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

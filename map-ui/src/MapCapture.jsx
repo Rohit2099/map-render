@@ -79,10 +79,14 @@ const MapCapture = () => {
         const map = mapRef.current;
         const center = map.getCenter();
         const zoom = map.getZoom();
-        const size = mapContainerStyle;
+        const details = {
+            lat: selectedPosition.current.lat,
+            lng: selectedPosition.current.lng,
+            zoom: mapRef.current.zoom
+        };
 
-        const image = `https://maps.googleapis.com/maps/api/staticmap?center=${selectedPosition.current.lat},${selectedPosition.current.lng}&zoom=${mapRef.current.zoom}&size=600x400&key=${REACT_APP_GOOGLE_MAPS_API_KEY}`;
-
+        const imageNor= 'https://maps.googleapis.com/maps/api/staticmap?center=${details.lat},${details.lng}&zoom=${details.zoom}&size=600x400&key=${REACT_APP_GOOGLE_MAPS_API_KEY}';
+        let image = eval('`'+imageNor+'`');
         try {
             await axios.post(
                 "http://localhost:5000/api/captures/upload",
@@ -90,7 +94,7 @@ const MapCapture = () => {
                     latitude: center.lat(),
                     longitude: center.lng(),
                     zoom: zoom,
-                    imageUrl: image,
+                    imageUrl: imageNor,
                 },
                 {
                     headers: {

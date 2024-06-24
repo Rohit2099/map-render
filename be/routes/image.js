@@ -3,30 +3,27 @@ const Capture = require("../models/Capture");
 const imageRouter = express.Router();
 
 const { authenticateToken } = require("./login");
+const User = require("../models/User");
 console.log(authenticateToken);
 // Endpoint to save image URL and metadata to MongoDB
-imageRouter.post(
-    "/upload",
-    authenticateToken,
-    async (req, res) => {
-        const { latitude, longitude, zoom, imageUrl } = req.body;
+imageRouter.post("/upload", authenticateToken, async (req, res) => {
+    const { latitude, longitude, zoom, imageUrl } = req.body;
 
-        const capture = new Capture({
-            userId: req.user.id,
-            latitude: parseFloat(latitude),
-            longitude: parseFloat(longitude),
-            zoom: parseInt(zoom),
-            imageUrl,
-        });
+    const capture = new Capture({
+        userId: req.user.id,
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        zoom: parseInt(zoom),
+        imageUrl,
+    });
 
-        try {
-            await capture.save();
-            res.status(200).json({ message: "Capture saved successfully" });
-        } catch (error) {
-            res.status(500).json({ message: "Error saving capture", error });
-        }
+    try {
+        await capture.save();
+        res.status(200).json({ message: "Capture saved successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error saving capture", error });
     }
-);
+});
 
 // Endpoint to get all captures for the logged-in user
 imageRouter.get("/", authenticateToken, async (req, res) => {
@@ -51,5 +48,29 @@ imageRouter.get("/:id", authenticateToken, async (req, res) => {
         res.status(500).json({ message: "Error fetching capture", error });
     }
 });
+
+
+imageRouter.get("/top3", async (req, res) => {
+    try {
+        debugger;
+        const topRegions = await Capture.aggregate([
+            {
+                $group: {
+                    _id: { latitude: "$latitude", longitude: "$longitude" },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { count: -1 } },
+            { $limit: 3 },
+        ]);
+
+        res.json(topRegions);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+module.exports = router;
 
 module.exports = imageRouter;

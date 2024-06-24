@@ -6,6 +6,7 @@ import UserCaptures from "./UserCaptures.jsx";
 import { AuthProvider } from "./AuthContext.jsx";
 import Render3D from "./Render3d.jsx";
 import NavBar from "./NavBar";
+import TopCaptures from './TopCaptures.jsx';
 
 const App = () => {
     return (
@@ -18,6 +19,7 @@ const App = () => {
                         <Route path="/login" element={<Login />} />
                         <Route path="/capture" element={<MapCapture />} />
                         <Route path="/captures" element={<UserCaptures />} />
+                        <Route path="/topcaptures" element={<TopCaptures />} />
                         <Route path="/render3d" element={<Render3D />} />
                     </Routes>
                 </div>
