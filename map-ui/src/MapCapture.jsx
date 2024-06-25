@@ -82,7 +82,7 @@ const MapCapture = () => {
         let image = eval('`'+imageNor+'`');
         try {
             await axios.post(
-                "http://localhost:5000/api/captures/upload",
+                "https://map-render-server-f6wlt3hjv-rohit2099s-projects.vercel.app/api/captures/upload",
                 {
                     latitude: Math.floor(center.lat()),
                     longitude: Math.floor(center.lng()),

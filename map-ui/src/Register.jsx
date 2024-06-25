@@ -14,7 +14,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5000/api/users/register', {
+      const response = await axios.post('https://map-render-server-f6wlt3hjv-rohit2099s-projects.vercel.app/api/users/register', {
         username,
         password,
       });
