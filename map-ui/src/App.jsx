@@ -7,6 +7,7 @@ import { AuthProvider } from "./AuthContext.jsx";
 import Render3D from "./Render3d.jsx";
 import NavBar from "./NavBar";
 import TopCaptures from './TopCaptures.jsx';
+import Home from './Home.jsx'
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                 <NavBar />
                 <div className="container mx-auto p-4">
                     <Routes>
+                        <Route path="/" element={<Home />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/capture" element={<MapCapture />} />
