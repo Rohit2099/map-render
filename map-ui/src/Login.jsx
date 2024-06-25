@@ -3,12 +3,12 @@ import axios from "axios";
 import { AuthContext } from "./AuthContext.jsx";
 import { useNavigate } from "react-router";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
-    const URL = import.meta.env.BASE_URL;
 
 
     const { login } = useContext(AuthContext);

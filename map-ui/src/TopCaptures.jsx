@@ -5,7 +5,7 @@ import { AuthContext } from "./AuthContext";
 
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-const BASE_URL = import.meta.env.BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 
 const UserCaptures = () => {

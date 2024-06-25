@@ -4,7 +4,7 @@ import { AuthContext } from './AuthContext.jsx';
 import { useNavigate } from 'react-router';
 
 
-const BASE_URL = import.meta.env.BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 
 const Register = () => {
