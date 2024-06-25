@@ -1,5 +1,6 @@
-## Map Renderer
+## Map Render app
 This was implemented as part of an assignment from the SnapTrude team.
+Deployed in Vercel - https://map-render-client.vercel.app/
 
 ## Requirements
 Create a ReactJS app (MERN stack) to get the user to choose a location on a map (use Google Maps or Mapbox), display the region visible in the map and then on the click of a button, capture the visible region in the map as an image and apply it as a material (texture) to a 3D cuboid using BabylonJs.
@@ -31,4 +32,15 @@ Create a ReactJS app (MERN stack) to get the user to choose a location on a map 
 
 ## Middlewares Implemented
 - authenticateToken - Middleware to check for the JWT from the request headers.
+
+## MongoDB Database
+- User Model - Username and Password
+- Capture Model - User ID, Latitude, Longitude, Zoom and Image URL
+
+## Platform
+- Frontend - ReactJS, BabylonJS, TailwindCSS
+- Backend - NodeJS, Express
+- Database - MongoDB
+- Deploy - Vercel
+
 
