@@ -43,6 +43,13 @@ const Render3D = () => {
         );
         light.intensity = 0.7;
 
+        const light2 = new HemisphericLight(
+            "light",
+            new Vector3(-1,-1, 0),
+            scene
+        );
+        light2.intensity = 0.7;
+
         const spotLight = new SpotLight(
             "spotLight",
             new Vector3(2, 2, 2),
