@@ -8,7 +8,7 @@ const REACT_APP_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 
-const UserCaptures = () => {
+const TopCaptures = () => {
     const [captures, setCaptures] = useState([]);
     const { token } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -50,7 +50,7 @@ const UserCaptures = () => {
                     lng: capture.longitude,
                     zoom: capture.zoom
                 };
-                let image = eval('`' + capture.imageUrl + '`');
+                let image = capture.imageUrl.replace("${details.lat}", details.lat).replace("${details.lng}", details.lng).replace("${details.zoom}", details.zoom).replace("${REACT_APP_GOOGLE_MAPS_API_KEY}", REACT_APP_GOOGLE_MAPS_API_KEY);
                 return (<div key={capture._id} className="border rounded-lg overflow-hidden shadow-sm bg-gray-50">
                   <img src={image} alt={`Capture at ${capture.latitude}, ${capture.longitude}`} className="w-full h-48 object-cover hover:opacity-60 hover:cursor-pointer" onClick={onImageSelect}/>
                   <div className="p-4">
@@ -66,4 +66,4 @@ const UserCaptures = () => {
       );
 };
 
-export default UserCaptures;
+export default TopCaptures;
