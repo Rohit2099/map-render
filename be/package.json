@@ -1,7 +1,8 @@
 {
   "name": "be",
   "version": "1.0.0",
-  "main": "index.js",
+  "proxy": "https://map-render-server-d6io8b9pv-rohit2099s-projects.vercel.app",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
