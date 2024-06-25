@@ -81,7 +81,8 @@ const MapCapture = () => {
         };
 
         const imageNor= 'https://maps.googleapis.com/maps/api/staticmap?center=${details.lat},${details.lng}&zoom=${details.zoom}&size=600x400&key=${REACT_APP_GOOGLE_MAPS_API_KEY}';
-        let image = eval('`'+imageNor+'`');
+        let image = imageNor.replace("${details.lat}", details.lat).replace("${details.lng}", details.lng).replace("${details.zoom}", details.zoom).replace("${REACT_APP_GOOGLE_MAPS_API_KEY}", REACT_APP_GOOGLE_MAPS_API_KEY);
+
         try {
             await axios.post(
                 BASE_URL + "/api/captures/upload",

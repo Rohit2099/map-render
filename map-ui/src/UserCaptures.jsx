@@ -10,6 +10,7 @@ const BASE_URL = import.meta.env.VITE_BASE_URL;
 const UserCaptures = () => {
     const [captures, setCaptures] = useState([]);
     const { token } = useContext(AuthContext);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -24,11 +25,13 @@ const UserCaptures = () => {
                     }
                 );
                 setCaptures(response.data);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching captures:", error);
             }
         };
         if (token) {
+            setLoading(true);
             fetchCaptures();
         }
     }, [token]);
@@ -43,6 +46,9 @@ const UserCaptures = () => {
           <div className="w-full max-w-5xl p-6 bg-white rounded-lg shadow-lg">
             <h2 className="text-3xl font-semibold text-center mb-6 text-gray-700">Your Captures</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {
+                    loading ? "Loading" : <></>
+                }
               {captures.map(capture => {
                 const details = {
                     lat: capture.latitude,
