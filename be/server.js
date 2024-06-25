@@ -20,6 +20,11 @@ app.use('/api/users', loginRouter);
 app.use('/api/captures', imageRouter);
 debugger;
 
+app.get("/", (req, res) => {
+    debugger;
+    res.status(200).send("Server started");
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
