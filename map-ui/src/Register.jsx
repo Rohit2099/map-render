@@ -3,6 +3,10 @@ import axios from 'axios';
 import { AuthContext } from './AuthContext.jsx';
 import { useNavigate } from 'react-router';
 
+
+const BASE_URL = import.meta.env.BASE_URL;
+
+
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +18,7 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('https://map-render-server-f6wlt3hjv-rohit2099s-projects.vercel.app/api/users/register', {
+      const response = await axios.post(BASE_URL + '/api/users/register', {
         username,
         password,
       });

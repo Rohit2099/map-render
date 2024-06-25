@@ -3,10 +3,13 @@ import axios from "axios";
 import { AuthContext } from "./AuthContext.jsx";
 import { useNavigate } from "react-router";
 
+
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const URL = import.meta.env.BASE_URL;
+
 
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -15,7 +18,7 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await axios.post(
-                "https://map-render-server-f6wlt3hjv-rohit2099s-projects.vercel.app/api/users/login",
+                BASE_URL + "/api/users/login",
                 {
                     username,
                     password,

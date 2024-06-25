@@ -5,6 +5,8 @@ import { AuthContext } from "./AuthContext";
 
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const BASE_URL = import.meta.env.BASE_URL;
+
 const UserCaptures = () => {
     const [captures, setCaptures] = useState([]);
     const { token } = useContext(AuthContext);
@@ -14,7 +16,7 @@ const UserCaptures = () => {
         const fetchCaptures = async () => {
             try {
                 const response = await axios.get(
-                    "https://map-render-server-f6wlt3hjv-rohit2099s-projects.vercel.app/api/captures",
+                    BASE_URL + "/api/captures",
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,

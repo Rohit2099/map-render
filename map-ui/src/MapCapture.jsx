@@ -9,6 +9,8 @@ import axios from "axios";
 import { AuthContext } from "./AuthContext.jsx";
 
 const REACT_APP_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
+const BASE_URL = import.meta.env.BASE_URL;
+
 
 const MapCapture = () => {
     const mapContainerStyle = {
@@ -82,7 +84,7 @@ const MapCapture = () => {
         let image = eval('`'+imageNor+'`');
         try {
             await axios.post(
-                "https://map-render-server-f6wlt3hjv-rohit2099s-projects.vercel.app/api/captures/upload",
+                BASE_URL + "/api/captures/upload",
                 {
                     latitude: Math.floor(center.lat()),
                     longitude: Math.floor(center.lng()),
