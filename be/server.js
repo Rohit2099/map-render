@@ -6,7 +6,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(cors({
-    origin: /\.vercel\.app$/,
+    origin: 'https://map-render-client-2mff4n2ju-rohit2099s-projects.vercel.app',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true
 }));
