@@ -19,7 +19,7 @@ const authenticateToken = (req, res, next) => {
 loginRouter.post("/register",
     [
         check("username", "Username is required").not().isEmpty(),
-        check("password", "Password is required").isLength({ min: 6 }),
+        check("password", "Password is required").isLength({ min: 2 }),
     ],
     async (req, res) => {
         const errors = validationResult(req);
