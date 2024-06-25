@@ -20,4 +20,15 @@ Create a ReactJS app (MERN stack) to get the user to choose a location on a map 
 - Capture map Screen: Users can choose a location from the search box or use the mouse to drag and decide on a location. When the 'Capture Region' is pressed, the (latitude, longitude) is rounded by to its near integer (to fecth the top3 captures) and is saved as an image url. The user is then redirected to the 3D render screen.
 - 3D Render: Image captured in the previous screen is rendered here as a 3D cuboid with sufficient lighting and flexibility in movement of camera.
 
+## API
+- /api/users/register - POST - Register User and return a JWT token for session management
+- /api/users/login - POST - Login User and return a JWT token for session management. The token is saved in the client side local storage.
+- /api/captures - GET - Fetch the user's captures
+- /api/captures/upload - POST - Upload a captured image
+- /api/captures/top3 - GET - Top 3 frequently captured images
+- /api/captures/:id - GET - Image by id (Not used in the application)
+- / - GET - Mock API to test the server
+
+## Middlewares Implemented
+- authenticateToken - Middleware to check for the JWT from the request headers.
 
